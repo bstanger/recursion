@@ -19,30 +19,30 @@ var stringifyJSON = function(obj) {
   		if(obj.length == 0) { // Base case
   			return "[]";
   		}
-		var arrayContent = obj.map(function(arrayItem){ // Recursive case
+		var arrOfArrStrings = obj.map(function(arrayItem){ // Recursive case
 			return stringifyJSON(arrayItem);
 		});
-		return "[" + arrayContent + "]";
+		return "[" + arrOfArrStrings + "]";
 
   	// Handle objects
   	} else {
   		if (_.isEmpty(obj)) { // Base case
   			return "{}";
   		}
-  		var objContainer = [];
-  		var keyValueString = "";
+  		
+  		var arrOfObjStrings = [];
 
   		for (var objKey in obj){ // Recursive case
   			var objKeyValue = obj[objKey];
-  			keyValueString = stringifyJSON(objKey) + ":" + stringifyJSON(objKeyValue);
-  			objContainer.push(keyValueString);
-  			
+  			var keyValueString = stringifyJSON(objKey) + ":" + stringifyJSON(objKeyValue);
+  			arrOfObjStrings.push(keyValueString);
+
   			if(stringifyJSON(objKey) === undefined || stringifyJSON(objKeyValue) === undefined ||
   				typeof objKey === "function" || typeof objKeyValue === "function"){
-  					objContainer.pop();
+  					arrOfObjStrings.pop();
   			}
   		};
-  		return "{" + objContainer + "}";
+  		return "{" + arrOfObjStrings + "}";
   	}
   }
 };
