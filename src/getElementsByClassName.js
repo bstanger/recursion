@@ -6,38 +6,19 @@
 // But instead we're going to implement it from scratch:
 var getElementsByClassName = function(className) {
 
-	// Create helper list of all nodes
+	// Iterate through all nodes, check for class name, and then iterate children
 	var bodyEl = document.body;
-	var childNodesEls = [bodyEl];
+	var elsWithClassName = [];
+	if(bodyEl.classList.contains(className)) elsWithClassName.push(bodyEl);
 	var findChildNodes = function(childNodesList){
 		childNodesList.forEach(function(node) {
-			if(node.nodeType === 1){
-				childNodesEls.push(node);
-				findChildNodes(node.childNodes);
+			if(node.nodeType === 1 && node.classList && node.classList.contains(className)){
+				elsWithClassName.push(node);
 			}
+			if(node.childNodes) findChildNodes(node.childNodes);
 		});
 	};
 	findChildNodes(bodyEl.childNodes);
 
-	// Return all nodes with class name
-	var elsWithClassName = [];
-	var checkForClassName = function(nodesList){
-		var lastNode = nodesList[nodesList.length - 1];
-		var lastNodeClasses = lastNode.classList;
-		if(lastNodeClasses && lastNodeClasses.contains(className)){
-			elsWithClassName.unshift(lastNode);
-		}
-		nodesList.pop();
-		if(childNodesEls.length){
-			checkForClassName(childNodesEls);
-		} else {
-			return elsWithClassName;
-		}
-	};
-
-	if(childNodesEls.length){
-		checkForClassName(childNodesEls);
-		return elsWithClassName;
-	}
-
+	return elsWithClassName;
 };
